@@ -1,151 +1,195 @@
-from datetime import date
 from typing import List
+from datetime import date
 
 from price_manager.entities.entities import (
-  Producto,
-  Precio,
-  Stock,
-  CotizacionDolar,
+  Producto, Precio, Stock, CotizacionDolar
 )
 
-from price_manager.repositories.repositories import (
-  RepositorioProducto,
-  RepositorioStock,
-  RepositorioCotizacionDolar,
-)
+
+# SERVICIOS SIMPLES (CRUD)
+
+class ServicioCategoria:
+
+  def __init__(self, repo):
+    self.repo = repo
+
+  def crear(self, entidad):
+    return self.repo.crear(entidad)
+
+  def obtener(self, id):
+    obj = self.repo.leer_por_id(id)
+    if not obj:
+      raise ValueError("Categoria no encontrada")
+    return obj
+
+  def listar_todos(self):
+    return self.repo.leer_todos()
+
+  def actualizar(self, entidad):
+    return self.repo.actualizar(entidad)
+
+  def eliminar(self, id):
+    if not self.repo.eliminar(id):
+      raise ValueError("Categoria no encontrada")
+
+
+class ServicioProveedor:
+
+  def __init__(self, repo):
+    self.repo = repo
+
+  def crear(self, entidad):
+    return self.repo.crear(entidad)
+
+  def obtener(self, id):
+    obj = self.repo.leer_por_id(id)
+    if not obj:
+      raise ValueError("Proveedor no encontrado")
+    return obj
+
+  def listar_todos(self):
+    return self.repo.leer_todos()
+
+  def actualizar(self, entidad):
+    return self.repo.actualizar(entidad)
+
+  def eliminar(self, id):
+    if not self.repo.eliminar(id):
+      raise ValueError("Proveedor no encontrado")
+
+
+class ServicioMoneda:
+
+  def __init__(self, repo):
+    self.repo = repo
+
+  def crear(self, entidad):
+    return self.repo.crear(entidad)
+
+  def obtener(self, id):
+    obj = self.repo.leer_por_id(id)
+    if not obj:
+      raise ValueError("Moneda no encontrada")
+    return obj
+
+  def listar_todos(self):
+    return self.repo.leer_todos()
+
+  def actualizar(self, entidad):
+    return self.repo.actualizar(entidad)
+
+  def eliminar(self, id):
+    if not self.repo.eliminar(id):
+      raise ValueError("Moneda no encontrada")
+
+
+class ServicioTipoCotizacion:
+
+  def __init__(self, repo):
+    self.repo = repo
+
+  def crear(self, entidad):
+    return self.repo.crear(entidad)
+
+  def obtener(self, id):
+    obj = self.repo.leer_por_id(id)
+    if not obj:
+      raise ValueError("TipoCotizacion no encontrado")
+    return obj
+
+  def listar_todos(self):
+    return self.repo.leer_todos()
+
+  def actualizar(self, entidad):
+    return self.repo.actualizar(entidad)
+
+  def eliminar(self, id):
+    if not self.repo.eliminar(id):
+      raise ValueError("TipoCotizacion no encontrado")
 
 
 # SERVICIO PRODUCTO
 
 class ServicioProducto:
 
-  def __init__(self, repo_producto: RepositorioProducto) -> None:
+  def __init__(self, repo_producto, srv_categoria, srv_proveedor):
     self.repo = repo_producto
+    self.srv_categoria = srv_categoria
+    self.srv_proveedor = srv_proveedor
 
-  def crear_producto(
-      self,
-      id: int,
-      nombre: str,
-      descripcion: str,
-      valor: float,
-      moneda,
-      categoria,
-      proveedor,
-  ) -> Producto:
-
-    if valor <= 0:
-      raise ValueError("El precio debe ser mayor a 0.")
-
-    precio = Precio(valor, moneda, date.today())
-
-    producto = Producto(
-      id,
-      nombre,
-      descripcion,
-      precio,
-      categoria,
-      proveedor,
-    )
-
+  def crear(self, producto: Producto) -> Producto:
     return self.repo.crear(producto)
 
-  def obtener_producto(self, id: int) -> Producto:
+  def obtener(self, id: int) -> Producto:
     producto = self.repo.leer_por_id(id)
     if not producto:
-      raise ValueError("Producto no encontrado.")
+      raise ValueError("Producto no encontrado")
     return producto
 
-  def listar_productos(self) -> List[Producto]:
+  def listar_todos(self) -> List[Producto]:
     return self.repo.leer_todos()
 
-  def actualizar_precio(
-      self,
-      id: int,
-      nuevo_valor: float,
-      nueva_moneda,
-  ) -> Producto:
-
-    if nuevo_valor <= 0:
-      raise ValueError("El precio debe ser mayor a 0.")
-
-    producto = self.obtener_producto(id)
-
-    producto.precio = Precio(
-      nuevo_valor,
-      nueva_moneda,
-      date.today()
-    )
-
+  def actualizar(self, producto: Producto) -> Producto:
     return self.repo.actualizar(producto)
 
-  def eliminar_producto(self, id: int) -> bool:
-    return self.repo.eliminar(id)
+  def eliminar(self, id: int):
+    if not self.repo.eliminar(id):
+      raise ValueError("Producto no encontrado")
 
 
 # SERVICIO STOCK
 
 class ServicioStock:
 
-  def __init__(self, repo_stock: RepositorioStock) -> None:
+  def __init__(self, repo_stock, srv_producto):
     self.repo = repo_stock
+    self.srv_producto = srv_producto
 
-  def crear_stock(self, stock: Stock) -> Stock:
-    return self.repo.crear(stock)
+  def registrar_movimiento(self, producto_id: int, cantidad: int):
 
-  def obtener_stock(self, producto_id: int) -> Stock:
+    # Validar producto
+    producto = self.srv_producto.obtener(producto_id)
+
     stock = self.repo.leer_por_producto(producto_id)
+
     if not stock:
-      raise ValueError("Stock no encontrado.")
-    return stock
+      stock = Stock(producto, 0)
 
-  def listar_stock(self) -> List[Stock]:
-    return self.repo.leer_todos()
+    nueva_cantidad = stock.cantidad + cantidad
 
-  def actualizar_stock(self, stock: Stock) -> Stock:
-    return self.repo.actualizar(stock)
+    if nueva_cantidad < 0:
+      raise ValueError("Stock no puede ser negativo")
 
-  def eliminar_stock(self, producto_id: int) -> bool:
-    return self.repo.eliminar(producto_id)
+    stock.cantidad = nueva_cantidad
+
+    if self.repo.leer_por_producto(producto_id):
+      self.repo.actualizar(stock)
+    else:
+      self.repo.crear(stock)
+
+  def obtener_stock(self, producto_id: int) -> int:
+    stock = self.repo.leer_por_producto(producto_id)
+    return stock.cantidad if stock else 0
 
 
 # SERVICIO COTIZACION
 
-class ServicioCotizacion:
+class ServicioCotizacionDolar:
 
-  def __init__(
-      self,
-      repo_cotizacion: RepositorioCotizacionDolar
-  ) -> None:
+  def __init__(self, repo_cotizacion, srv_tipo):
     self.repo = repo_cotizacion
+    self.srv_tipo = srv_tipo
 
-  def crear_cotizacion(
-      self,
-      cotizacion: CotizacionDolar
-  ) -> CotizacionDolar:
+  def registrar_cotizacion(self, cotizacion: CotizacionDolar):
     return self.repo.crear(cotizacion)
 
-  def obtener_cotizacion(
-      self,
-      tipo_id: int,
-      fecha
-  ) -> CotizacionDolar:
-    cotizacion = self.repo.leer_por_tipo_y_fecha(tipo_id, fecha)
-    if not cotizacion:
-      raise ValueError("Cotizacion no encontrada.")
-    return cotizacion
+  def obtener_historico(self, tipo_id: int):
 
-  def listar_cotizaciones(self) -> List[CotizacionDolar]:
-    return self.repo.leer_todos()
+    tipo = self.srv_tipo.obtener(tipo_id)
 
-  def actualizar_cotizacion(
-      self,
-      cotizacion: CotizacionDolar
-  ) -> CotizacionDolar:
-    return self.repo.actualizar(cotizacion)
+    historico = self.repo.leer_historico_por_tipo(tipo_id)
 
-  def eliminar_cotizacion(
-      self,
-      tipo_id: int,
-      fecha
-  ) -> bool:
-    return self.repo.eliminar(tipo_id, fecha)
+    if not historico:
+      raise ValueError("No hay cotizaciones para este tipo")
+
+    return historico
