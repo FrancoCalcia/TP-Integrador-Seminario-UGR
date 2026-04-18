@@ -1,0 +1,30 @@
+librerias vistas (se pueden utilizar)
+traceback
+random
+keyword
+collection
+import asyncio
+import nest_asyncio
+import sys
+importlib
+time
+math
+cmath
+typing
+enum
+functools
+operator
+abc
+dataclasses
+attr
+pydantic
+datetime
+uuid
+pydantic_settings
+contextlib
+configparser
+yaml
+xml
+csv
+json
+
