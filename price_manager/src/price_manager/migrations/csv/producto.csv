@@ -1,0 +1,11 @@
+id,nombre,descripcion,precio_valor,precio_moneda_id,precio_fecha,categoria_id,proveedor_id
+1,Mouse Logitech G502,Mouse gamer con sensor HERO 25K,45000.0,1,2026-04-20,1,6
+2,Teclado Redragon Kumara,Teclado mecanico RGB switches red,38000.0,1,2026-04-20,1,6
+3,Monitor Samsung 24 FHD,Monitor 24 pulgadas Full HD IPS,185000.0,1,2026-04-19,4,1
+4,SSD Kingston 480GB,Disco solido SATA 2.5 pulgadas,32000.0,1,2026-04-18,3,3
+5,Placa de Video RTX 4060,GPU NVIDIA GeForce RTX 4060 8GB,650000.0,1,2026-04-20,2,1
+6,Fuente Corsair 650W,Fuente certificada 80 Plus Bronze,120000.0,1,2026-04-17,8,4
+7,Gabinete Cooler Master,Gabinete mid-tower ATX con ventilacion,85000.0,1,2026-04-19,7,4
+8,Auriculares HyperX Cloud,Auriculares gaming con microfono,78000.0,1,2026-04-20,6,2
+9,Router TP-Link Archer,Router WiFi 6 doble banda AX1500,65000.0,1,2026-04-18,5,5
+10,Procesador AMD Ryzen 5 5600,CPU AM4 6 nucleos 12 hilos,180000.0,1,2026-04-20,2,7
