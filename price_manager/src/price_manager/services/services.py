@@ -183,6 +183,16 @@ class ServicioCotizacionDolar:
   def registrar_cotizacion(self, cotizacion: CotizacionDolar):
     return self.repo.crear(cotizacion)
 
+  def listar_todas(self):
+    return self.repo.leer_todos()
+
+  def actualizar_cotizacion(self, cotizacion: CotizacionDolar):
+    return self.repo.actualizar(cotizacion)
+
+  def eliminar_cotizacion(self, tipo_id: int, fecha):
+    if not self.repo.eliminar(tipo_id, fecha):
+      raise ValueError("Cotizacion no encontrada")
+
   def obtener_historico(self, tipo_id: int):
 
     tipo = self.srv_tipo.obtener(tipo_id)
