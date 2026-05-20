@@ -1,83 +1,108 @@
-# CHANGELOG
+# Changelog
 
-Registro de cambios reconstruido para el Sprint 1. Cada dia representa un
-punto o ejercicio distinto del trabajo practico.
+## Sprint 1
 
-## Sprint 1 - Price Manager
+### Día 1 — Inicialización del proyecto y versionado
 
-### Dia 1 - Inicializacion del proyecto
+- Se creó el repositorio en GitHub y se configuró el acceso por token.
+- Se definió la rama de trabajo `Sprint_1`.
+- Se generó la estructura de directorios del proyecto.
+- Se crearon los archivos base: `README.md`, `CHANGELOG.md` y
+  `requirements.txt`.
+- Se definió la variable `desactivar_git_push` para controlar los push.
 
-- Se creo la estructura base del proyecto `price_manager`.
-- Se definio la rama de trabajo `Sprint_1`.
-- Se organizaron las carpetas principales para entidades, repositorios,
-  servicios, datos iniciales, migraciones CSV e interfaz de consola.
-- Se agregaron archivos base del proyecto, incluyendo `README.md`,
-  `requirements.txt` y punto de entrada inicial.
+### Día 2 — Clases entidad
 
-### Dia 2 - Modelado de entidades
+- Se implementaron las clases de dominio aplicando encapsulamiento y POO:
+  `EntidadBase`, `Categoria`, `Proveedor`, `Moneda`, `TipoCotizacion`,
+  `Precio`, `Producto`, `Stock` y `CotizacionDolar`.
+- Se incorporaron validaciones de datos en cada propiedad.
+- Se aplicaron Type Hints e indentación de 2 espacios (PEP8).
 
-- Se implemento la entidad base con identificador numerico positivo.
-- Se agregaron las entidades de dominio: categoria, proveedor, moneda, tipo de
-  cotizacion, precio, producto, stock y cotizacion del dolar.
-- Se incorporaron validaciones de datos obligatorios, valores positivos,
-  codigos de moneda y fechas.
-- Se centralizo la logica comun de validacion dentro de las clases del dominio.
+### Día 3 — Repositorios y CRUD
 
-### Dia 3 - Repositorios en memoria
+- Se definieron las interfaces abstractas para repositorios.
+- Se implementó el repositorio genérico en memoria.
+- Se crearon repositorios concretos para cada entidad con CRUD completo.
 
-- Se definieron interfaces para repositorios CRUD.
-- Se implementaron repositorios en memoria para categorias, proveedores,
-  monedas, productos y tipos de cotizacion.
-- Se agregaron repositorios especificos para stock y cotizaciones del dolar.
-- Se contemplaron busquedas por id, por producto, por tipo de cotizacion y por
-  fecha segun correspondiera.
+### Día 4 — Servicios de lógica de negocio
 
-### Dia 4 - Servicios de aplicacion
+- Se crearon los servicios para cada entidad del dominio.
+- Se incorporaron validaciones de existencia antes de operar sobre registros.
+- Se implementó la lógica de movimiento de stock y registro de cotizaciones.
 
-- Se crearon servicios para separar la logica de uso respecto de los
-  repositorios.
-- Se agregaron servicios para categorias, proveedores, monedas, productos,
-  stock, tipos de cotizacion y cotizaciones.
-- Se incorporaron validaciones de existencia antes de consultar, actualizar o
-  eliminar registros.
-- Se preparo la capa de servicios para ser consumida desde la interfaz de
-  consola.
+### Día 5 — Precarga de datos desde archivos CSV
 
-### Dia 5 - Precarga y datos CSV
+- Se crearon los archivos CSV en `migrations/csv/` con al menos 10 registros
+  por entidad: categorías, proveedores, monedas, tipos de cotización,
+  productos, stock y cotizaciones del dólar.
+- Se implementó el módulo `preload_data.py` con la función
+  `cargar_todos_los_datos`.
 
-- Se agregaron archivos CSV dentro de `migrations/csv`.
-- Se cargaron datos iniciales de categorias, proveedores, monedas, productos,
-  stock, tipos de cotizacion y cotizaciones del dolar.
-- Se implemento el modulo de precarga para leer los CSV y crear las entidades
-  correspondientes.
-- Se verifico que la aplicacion pueda iniciar con datos disponibles para las
-  pruebas del sprint.
+### Día 6 — Interfaz de consola
 
-### Dia 6 - Aplicacion de consola
+- Se implementó `ui/console.py` con la clase `ConsoleUI`.
+- Se creó el menú interactivo con operaciones CRUD para cada entidad.
 
-- Se implemento el menu principal de la aplicacion.
-- Se agregaron opciones para listar, crear, actualizar y eliminar categorias.
-- Se agregaron opciones para listar productos, crear productos y actualizar
-  precios.
-- Se incorporaron consultas y movimientos de stock.
-- Se agregaron operaciones para listar, registrar, actualizar y eliminar
-  cotizaciones del dolar.
+### Día 7 — Punto de entrada y cierre del sprint
 
-### Dia 7 - Validaciones, persistencia y pruebas
+- Se creó `main.py` como punto de entrada de la aplicación.
+- Se configuró la precarga automática de datos al iniciar.
+- Se completó el `README.md` con el objetivo y el contexto del sprint.
 
-- Se agregaron validaciones de entrada para numeros enteros, importes, fechas y
-  textos obligatorios.
-- Se implemento persistencia en CSV para cambios realizados desde la consola en
-  categorias, productos, stock y cotizaciones.
-- Se ajusto el archivo `main.py` para construir repositorios, servicios,
-  precargar datos y ejecutar la consola.
-- Se probo el flujo principal con el test provisto por la catedra y con pruebas
-  manuales desde la consola.
+---
 
-### Dia 8 - Documentacion y cierre del sprint
+## Sprint 2
 
-- Se completo el `README.md` con objetivo, contexto, estructura del proyecto,
-  requisitos y forma de ejecucion.
-- Se reviso la estructura final del Sprint 1.
-- Se corrigieron detalles de mensajes, nombres y organizacion de archivos.
-- Se dejo constancia de los cambios principales en este `CHANGELOG.md`.
+### Día 1 — Inicialización del repositorio y nueva estructura
+
+- Se clonó el repositorio usando `GITHUB_TOKEN` (secret de Colab).
+- Se creó la rama `Sprint_2` a partir de `Sprint_1`.
+- Se extendió la estructura de directorios incorporando `database/`,
+  `models/` y `migrations/sql/`.
+
+### Día 2 — Clase ConexionDB
+
+- Se creó `database/connection.py` con la clase `ConexionDB`.
+- Se gestionó la conexión a SQLite con `create_engine` y `sessionmaker`.
+- Se expuso la instancia global `db_manager`.
+
+### Día 3 — Context manager de transacciones
+
+- Se agregó `session_scope()` como context manager en `connection.py`.
+- Se implementó el manejo seguro de `commit`, `rollback` y `close`.
+
+### Día 4 — Modelos ORM y tablas
+
+- Se crearon los modelos en `models/models.py`: `Categoria`, `Proveedor`,
+  `Precio`, `Producto` y `CotizacionDolar`.
+- Se definieron columnas, claves foráneas y relaciones entre tablas.
+- Se ejecutó `Base.metadata.create_all()` para crear las tablas en SQLite.
+
+### Día 5 — Migración de datos CSV a la base de datos
+
+- Se creó `migrations/migrations.py` con la función `migrar_datos()`.
+- Se migraron los datos de los CSV del Sprint 1 a la base de datos.
+- Se generaron archivos `.sql` con las sentencias de inserción en
+  `migrations/sql/`.
+
+### Día 6 — Repositorios con base de datos
+
+- Se actualizó `repositories/repositories.py` para operar sobre SQLAlchemy.
+- Se implementaron `ProductoRepository`, `CategoriaRepository` y
+  `ProveedorRepository` con métodos `get_all`, `get_by_id` y `add`.
+
+### Día 7 — API del dólar y dotenv
+
+- Se creó el archivo `.env` con `API_URL=https://dolarapi.com/v1/dolares`.
+- Se actualizó `services/services.py` con la clase `ServicioCotizacionDolar`.
+- Se implementó `obtener_cotizaciones()` para consultar la API y persistir
+  los resultados en la base de datos.
+
+### Día 8 — Extensión del menú de consola
+
+- Se actualizó `ui/console.py` con tres nuevas opciones: obtener
+  cotizaciones por API, ver lista de precios bimonetaria y exportar
+  precios a CSV.
+- Se actualizó `main.py` como punto de entrada del sistema.
+- Se completó el `README.md` con la introducción y el contexto del Sprint 2.
