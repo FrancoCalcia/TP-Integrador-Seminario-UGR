@@ -1,96 +1,24 @@
 # Price Manager
 
-Trabajo práctico integrador de la materia **Seminario de Actualización**
-(Universidad del Gran Rosario).
+## Sprint actual
 
-## Integrantes
-
-- Franco Calcia
-- Juana Zorzolo
-- Bruno Pace
-- Franco Bianciotto
-- Giuliano Crenna
-- Tomás Avecilla
-
-## Estado del proyecto
-
-Sprint 1 con estructura base, entidades, repositorios, servicios, precarga de
-datos y aplicación de consola (CLI) con menú principal.
+Sprint 1
 
 ## Objetivo
 
-Desarrollar una aplicación de consola en Python para gestionar:
+Desarrollar una aplicacion de consola en Python para gestionar productos,
+precios, stock, proveedores, categorias y cotizaciones del dolar dentro de un
+local de hardware.
 
-- Categorías
-- Proveedores
-- Monedas
-- Productos
-- Stock
-- Cotizaciones del dólar
+## Introduccion y contexto
 
-## Estructura principal
+El sistema busca modernizar la gestion de inventario de una empresa
+distribuidora de productos electronicos. Debido a la variacion constante de
+precios y monedas, el proyecto contempla el manejo de valores en distintas
+monedas, la actualizacion por cotizacion del dolar y la organizacion del stock
+por producto.
 
-```text
-price_manager/
-└── src/
-    └── price_manager/
-        ├── entities/
-        │   └── entities.py
-        ├── repositories/
-        │   └── repositories.py
-        ├── services/
-        │   └── services.py
-        ├── preload_data/
-        │   └── preload_data.py
-        ├── migrations/
-        │   └── csv/
-        ├── ui/
-        │   └── console.py
-        └── main.py
-```
+## Versionado
 
-## Requisitos
-
-- Python 3.11 o superior
-
-## Ejecución
-
-Desde la raíz del repositorio:
-
-```bash
-python .\price_manager\src\price_manager\main.py
-```
-
-La app inicia con precarga de datos desde `migrations/csv` y muestra el menú de
-consola.
-
-## Librerías permitidas
-- traceback
-- random
-- keyword
-- collection
-- asyncio
-- nest_asyncio
-- sys
-- importlib
-- time
-- math
-- cmath
-- typing
-- enum
-- functools
-- operator
-- abc
-- dataclasses
-- attr
-- pydantic
-- datetime
-- uuid
-- pydantic_settings
-- contextlib
-- configparser
-- yaml
-- xml
-- csv
-- json
+La rama de trabajo para este sprint es `Sprint_1`.
 
