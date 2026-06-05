@@ -1,1 +1,19 @@
-*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Databases
+*.db
+*.sqlite
+
+# Environment variables
+.env
+
+# Generated reports & alerts
+price_manager/price_manager/
+price_manager/report_*.xlsx
+price_manager/precios_exportados.csv
+
+# IDEs
+.vscode/
+.idea/
