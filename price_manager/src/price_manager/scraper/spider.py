@@ -5,7 +5,7 @@ from scrapy.loader import ItemLoader
 
 class StarComputacionSpider(scrapy.Spider):
     name = 'star_computacion'
-    allowed_domains = ['starcomputacion.com.ar']
+    allowed_domains = ['starcomputacion.com.ar', 'corsproxy.io']
 
     def __init__(self, *args, **kwargs):
         super(StarComputacionSpider, self).__init__(*args, **kwargs)
@@ -22,14 +22,15 @@ class StarComputacionSpider(scrapy.Spider):
             productos = repo.get_all()
             for prod in productos:
                 query = urllib.parse.quote(prod.nombre)
-                url = f"https://www.starcomputacion.com.ar/prods/search/?search={query}"
-                self.start_urls.append(url)
+                url = f'https://www.starcomputacion.com.ar/prods/search/?search={query}'
+                proxy_url = f'https://corsproxy.io/?{urllib.parse.quote(url)}'
+                self.start_urls.append(proxy_url)
                 # Mapear URL para recuperar metadatos en el parse
-                self.producto_map[url] = {
+                self.producto_map[proxy_url] = {
                     'id': prod.id,
                     'nombre': prod.nombre
                 }
-        print(f">>> SPIDER INICIALIZADA CON {len(self.start_urls)} URLS DE BUSQUEDA <<<", flush=True)
+        print(f'>>> SPIDER INICIALIZADA CON {len(self.start_urls)} URLS DE BUSQUEDA <<<', flush=True)
 
     def parse(self, response):
         # Buscar info de producto correspondiente al URL
@@ -48,7 +49,7 @@ class StarComputacionSpider(scrapy.Spider):
         producto_interno_id = prod_info['id']
         producto_interno_nombre = prod_info['nombre']
 
-        print(f">>> PARSE BUSQUEDA PARA '{producto_interno_nombre}' <<<", flush=True)
+        print(f'>>> PARSE BUSQUEDA PARA {producto_interno_nombre} <<<', flush=True)
 
         # Encontrar los cards de productos
         products = response.css('a.product')
@@ -56,7 +57,7 @@ class StarComputacionSpider(scrapy.Spider):
         products = products[:10]
 
         if not products:
-            self.log(f"No se encontraron resultados para: {producto_interno_nombre}")
+            self.log(f'No se encontraron resultados para: {producto_interno_nombre}')
             return
 
         for p in products:
@@ -66,12 +67,17 @@ class StarComputacionSpider(scrapy.Spider):
             img_src = p.css('img.img::attr(src)').get()
 
             # Resolver URL absoluta de la imagen y detalle
-            abs_img_url = response.urljoin(img_src) if img_src else None
-            abs_detail_url = response.urljoin(href) if href else None
+            if img_src:
+                abs_img_url = img_src if img_src.startswith('http') else f'https://www.starcomputacion.com.ar/{img_src.lstrip("/")}'
+            else:
+                abs_img_url = None
 
-            if abs_detail_url:
+            if href:
+                orig_detail_url = href if href.startswith('http') else f'https://www.starcomputacion.com.ar/{href.lstrip("/")}'
+                proxy_detail_url = f'https://corsproxy.io/?{urllib.parse.quote(orig_detail_url)}'
+                
                 yield scrapy.Request(
-                    url=abs_detail_url,
+                    url=proxy_detail_url,
                     callback=self.parse_detail,
                     meta={
                         'producto_interno_id': producto_interno_id,
@@ -89,7 +95,7 @@ class StarComputacionSpider(scrapy.Spider):
         precio_web = response.meta['precio_web']
         imagen_url = response.meta['imagen_url']
 
-        print(f">>> PARSE DETALLE: '{nombre_web}' ({precio_web}) <<<", flush=True)
+        print(f'>>> PARSE DETALLE: {nombre_web} ({precio_web}) <<<', flush=True)
 
         loader = ItemLoader(item=ProductoWebItem(), response=response)
         loader.add_value('producto_interno_id', producto_interno_id)
@@ -114,7 +120,7 @@ class StarComputacionSpider(scrapy.Spider):
 
         # Si no hay tabla de precios, crear una forma de pago simple de contado
         if not formas_pago and precio_web:
-            formas_pago["CONTADO"] = precio_web.strip()
+            formas_pago['CONTADO'] = precio_web.strip()
 
         item = loader.load_item()
         item['formas_pago'] = formas_pago
