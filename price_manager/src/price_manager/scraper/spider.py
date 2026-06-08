@@ -23,7 +23,7 @@ class StarComputacionSpider(scrapy.Spider):
             for prod in productos:
                 query = urllib.parse.quote(prod.nombre)
                 url = f'https://www.starcomputacion.com.ar/prods/search/?search={query}'
-                proxy_url = f'https://corsproxy.io/?{urllib.parse.quote(url)}'
+                proxy_url = f'https://corsproxy.io/?url={urllib.parse.quote(url)}'
                 self.start_urls.append(proxy_url)
                 # Mapear URL para recuperar metadatos en el parse
                 self.producto_map[proxy_url] = {
@@ -74,7 +74,7 @@ class StarComputacionSpider(scrapy.Spider):
 
             if href:
                 orig_detail_url = href if href.startswith('http') else f'https://www.starcomputacion.com.ar/{href.lstrip("/")}'
-                proxy_detail_url = f'https://corsproxy.io/?{urllib.parse.quote(orig_detail_url)}'
+                proxy_detail_url = f'https://corsproxy.io/?url={urllib.parse.quote(orig_detail_url)}'
                 
                 yield scrapy.Request(
                     url=proxy_detail_url,
