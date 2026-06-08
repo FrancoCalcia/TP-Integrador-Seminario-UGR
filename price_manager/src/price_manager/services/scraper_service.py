@@ -29,6 +29,11 @@ class ScraperService:
             with session_scope() as session:
                 cantidad = session.query(PrecioCompetencia).count()
                 print(f"[STATS] Se registraron {cantidad} cotizaciones de la competencia en la base de datos.")
+            if cantidad == 0:
+                print("\n[DEBUG] Salida del scraper (stdout):")
+                print(result.stdout)
+                print("[DEBUG] Errores del scraper (stderr):")
+                print(result.stderr)
             return True
         else:
             print("[ERROR] Ocurrio un error al ejecutar el scraping:")
