@@ -9,6 +9,12 @@
   - `5. Generar reporte comparativo e ingresar alertas`: Crea el Excel de comparación y solicita un umbral en pesos para generar alertas CSV.
   - `6. Ver historial de auditoría`: Muestra de forma tabular la base de auditorías registradas.
 
+### Estabilidad y Correcciones Realizadas (Sprint 3)
+- **Resolución de Error Multiline en SQLite**: Se corrigió la lógica de `cargar_sqls` para fraccionar y ejecutar de manera individual las sentencias SQL de migración base, evitando el error de ejecución múltiple en SQLite3.
+- **Evitación de Bloqueos de Base de Datos**: Se implementó la eliminación física del archivo `.db` y la liberación del `engine` al reiniciar las celdas de inicialización, previniendo estados de "readonly database" o bloqueos por conexiones huérfanas en ejecuciones repetidas.
+- **Bypass de Bloqueo 403 (Forbidden)**: Se incorporaron cabeceras de navegación y firmas de `USER_AGENT` reales para evitar que los filtros anti-bot de Cloudfront de la competencia bloqueen las consultas de Scrapy provenientes de entornos cloud (como Colab).
+- **Huso Horario Local (UTC-3)**: Se configuró el huso horario de Argentina (UTC-3) en todas las fechas automáticas del sistema (auditoría, cotizaciones, extracciones de competencia y nombres de reportes generados), garantizando la consistencia horaria independientemente de la ubicación del servidor.
+
 ### [Ejercicio 06] - Auditorías y Decorador de Registro
 - Se creó el decorador `@auditar` en `price_manager/utils/audit.py` que registra automáticamente el éxito o fallo de las acciones críticas.
 - Se definió el modelo `Auditoria` en `price_manager/models/models.py` para almacenar `accion`, `fecha` y `detalle`.
