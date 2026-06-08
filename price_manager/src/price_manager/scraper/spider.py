@@ -29,7 +29,7 @@ class StarComputacionSpider(scrapy.Spider):
                     'id': prod.id,
                     'nombre': prod.nombre
                 }
-        print(f'>>> SPIDER INICIALIZADA CON {len(self.start_urls)} URLS DE BUSQUEDA <<<', flush=True)
+
 
     def parse(self, response):
         # Buscar info de producto correspondiente al URL
@@ -48,7 +48,7 @@ class StarComputacionSpider(scrapy.Spider):
         producto_interno_id = prod_info['id']
         producto_interno_nombre = prod_info['nombre']
 
-        print(f'>>> PARSE BUSQUEDA PARA {producto_interno_nombre} <<<', flush=True)
+
 
         # Encontrar los cards de productos
         products = response.css('a.product')
@@ -93,7 +93,7 @@ class StarComputacionSpider(scrapy.Spider):
         precio_web = response.meta['precio_web']
         imagen_url = response.meta['imagen_url']
 
-        print(f'>>> PARSE DETALLE: {nombre_web} ({precio_web}) <<<', flush=True)
+
 
         loader = ItemLoader(item=ProductoWebItem(), response=response)
         loader.add_value('producto_interno_id', producto_interno_id)
