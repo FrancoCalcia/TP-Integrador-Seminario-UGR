@@ -1,5 +1,5 @@
 from functools import wraps
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from price_manager.database.connection import session_scope
 from price_manager.models.models import Auditoria
 
@@ -31,7 +31,7 @@ def auditar(accion: str, detalle_func=None):
                 with session_scope() as session:
                     log = Auditoria(
                         accion=accion,
-                        fecha=datetime.now(),
+                        fecha=datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None),
                         detalle=detalle
                     )
                     session.add(log)
@@ -42,7 +42,7 @@ def auditar(accion: str, detalle_func=None):
                 with session_scope() as session:
                     log = Auditoria(
                         accion=accion,
-                        fecha=datetime.now(),
+                        fecha=datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None),
                         detalle=f"FALLO en {func.__name__}: {str(e)}"
                     )
                     session.add(log)

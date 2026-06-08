@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from sqlalchemy import (
     Column,
     DateTime,
@@ -29,7 +29,7 @@ class Precio(Base):
     id = Column(Integer, primary_key=True, index=True)
     valor = Column(Float)
     moneda = Column(String)
-    ultima_actualizacion = Column(DateTime, default=datetime.now)
+    ultima_actualizacion = Column(DateTime, default=lambda: datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None))
 
 # MODELO DE PRODUCTOS
 class Producto(Base):
@@ -52,14 +52,14 @@ class CotizacionDolar(Base):
     nombre = Column(String)
     compra = Column(Float)
     venta = Column(Float)
-    fecha_actualizacion = Column(DateTime, default=datetime.now)
+    fecha_actualizacion = Column(DateTime, default=lambda: datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None))
 
 # MODELO DE AUDITORÍA (SPRINT 3)
 class Auditoria(Base):
     __tablename__ = 'auditoria'
     id = Column(Integer, primary_key=True, autoincrement=True)
     accion = Column(String, nullable=False)
-    fecha = Column(DateTime, default=datetime.now)
+    fecha = Column(DateTime, default=lambda: datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None))
     detalle = Column(String)
 
 # MODELO DE PRECIOS COMPETENCIA (SPRINT 3)
@@ -72,6 +72,6 @@ class PrecioCompetencia(Base):
     imagen_url = Column(String)
     descripcion_web = Column(String)
     formas_pago = Column(String)  # Se guardará como representación JSON o texto estructurado
-    fecha_extraccion = Column(DateTime, default=datetime.now)
+    fecha_extraccion = Column(DateTime, default=lambda: datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None))
 
     producto = relationship("Producto")

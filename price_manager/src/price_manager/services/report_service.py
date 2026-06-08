@@ -1,6 +1,6 @@
 import os
 import csv
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 import pandas as pd
 
@@ -27,7 +27,7 @@ class ReportService:
     def generar_alerta_csv(cls, diferencia_limite: float) -> str:
         """Compara precios y genera un archivo CSV de alerta si superan el límite."""
         alerts_dir, _ = cls.get_paths()
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone(timedelta(hours=-3))).strftime("%Y%m%d_%H%M%S")
         csv_filename = f"alert_{timestamp}.csv"
         csv_path = os.path.join(alerts_dir, csv_filename)
 
@@ -83,7 +83,7 @@ class ReportService:
     def generar_reporte_excel(cls) -> str:
         """Genera el reporte de precios comparativos en formato Excel (.xlsx)."""
         _, reports_dir = cls.get_paths()
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone(timedelta(hours=-3))).strftime("%Y%m%d_%H%M%S")
         excel_filename = f"report_{timestamp}.xlsx"
         excel_path = os.path.join(reports_dir, excel_filename)
 

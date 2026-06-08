@@ -1,7 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 from price_manager.database.connection import session_scope
 from price_manager.models.models import CotizacionDolar
 
@@ -31,7 +31,7 @@ class ServicioCotizacionDolar:
                         nombre=moneda['nombre'],
                         compra=moneda['compra'],
                         venta=moneda['venta'],
-                        fecha_actualizacion=datetime.now()
+                        fecha_actualizacion=datetime.now(timezone(timedelta(hours=-3))).replace(tzinfo=None)
                     )
                     session.add(cotizacion)
             return data
