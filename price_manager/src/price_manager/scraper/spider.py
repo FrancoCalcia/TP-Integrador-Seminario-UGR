@@ -5,7 +5,7 @@ from scrapy.loader import ItemLoader
 
 class StarComputacionSpider(scrapy.Spider):
     name = 'star_computacion'
-    allowed_domains = ['starcomputacion.com.ar', 'corsproxy.io']
+    allowed_domains = ['starcomputacion.com.ar']
 
     def __init__(self, *args, **kwargs):
         super(StarComputacionSpider, self).__init__(*args, **kwargs)
@@ -23,10 +23,9 @@ class StarComputacionSpider(scrapy.Spider):
             for prod in productos:
                 query = urllib.parse.quote(prod.nombre)
                 url = f'https://www.starcomputacion.com.ar/prods/search/?search={query}'
-                proxy_url = f'https://corsproxy.io/?url={urllib.parse.quote(url)}'
-                self.start_urls.append(proxy_url)
+                self.start_urls.append(url)
                 # Mapear URL para recuperar metadatos en el parse
-                self.producto_map[proxy_url] = {
+                self.producto_map[url] = {
                     'id': prod.id,
                     'nombre': prod.nombre
                 }
@@ -74,10 +73,9 @@ class StarComputacionSpider(scrapy.Spider):
 
             if href:
                 orig_detail_url = href if href.startswith('http') else f'https://www.starcomputacion.com.ar/{href.lstrip("/")}'
-                proxy_detail_url = f'https://corsproxy.io/?url={urllib.parse.quote(orig_detail_url)}'
                 
                 yield scrapy.Request(
-                    url=proxy_detail_url,
+                    url=orig_detail_url,
                     callback=self.parse_detail,
                     meta={
                         'producto_interno_id': producto_interno_id,
